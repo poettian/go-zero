@@ -82,6 +82,9 @@ func (lm *listenerManager) addListener(fn func()) (waitForCalled func()) {
 	})
 	lm.lock.Unlock()
 
+	// @tips: 这个返回的函数，可以用也可以不用，如何使用的话，最好在所有的 AddListener 之后再调用
+	// 因为它会阻塞住直到前面的所有 listener 都被执行完
+	// 目前还没搞明白这里使用 waitGroup 的意图，因为在 notifyListeners 中也使用了 waitGroup
 	return func() {
 		lm.waitGroup.Wait()
 	}
